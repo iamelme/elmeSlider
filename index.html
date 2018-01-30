@@ -30,56 +30,68 @@
 
     <script>
         'use strict';
+        window.onload = function() {
+            let sliderContainer = document.querySelector('.slider__inner'),
+                slides = document.querySelectorAll('.slider__item'),
+                navBtn = document.querySelectorAll('.nav'),
+                widthContainer = 0,
+                slidesArrCoorX = [0],
+                coordX,
+                currentIdx;
 
-        let sliderContainer = document.querySelector('.slider__inner'),
-            slides = document.querySelectorAll('.slider__item'),
-            navBtn = document.querySelectorAll('.nav'),
-            widthContainer = 0,
-            slidesArrCoorX = [0];
+                slides.forEach(e => {
+                    widthContainer += e.offsetWidth;
+                });
 
-            slides.forEach(e => {
-                widthContainer += e.offsetWidth;
-              
-            });
-
-            sliderContainer.style.width = `${widthContainer}px`; // initial width
-
-            let currentIdx;
-
-            slides.forEach((e, idx) => {
-                if(e.className.indexOf('current') !== -1) {
-                    currentIdx = idx;
-                }
-                if(idx < slides.length - 1) {
-                    slidesArrCoorX.push(e.getBoundingClientRect().x);
-                }
-            });
-
-            slides[0].classList.add('current');
-            console.log(currentIdx +' <--- index outside');
+                sliderContainer.style.width = `${widthContainer}px`; // initial width
 
 
-            let coordX;
-
-            console.log(slidesArrCoorX);
-
-            function coords() {
-                console.log(slidesArrCoorX);
-                
                 slides.forEach((e, idx) => {
                     if(e.className.indexOf('current') !== -1) {
-                        e.classList.remove('current');
                         currentIdx = idx;
+                    }
+                    if(idx < slides.length - 1) {
+                        slidesArrCoorX.push(e.getBoundingClientRect().x);
                     }
                 });
 
-               
-                console.log(currentIdx +' <--- index');
-               
-                console.log(slidesArrCoorX[currentIdx]);
+                slides[0].classList.add('current');
+                console.log(currentIdx +' <--- index outside');
+
+                console.log(slidesArrCoorX);
+
+                function coords() {
+                    console.log(slidesArrCoorX);
+                    
+                    slides.forEach((e, idx) => {
+                        if(e.className.indexOf('current') !== -1) {
+                            e.classList.remove('current');
+                            currentIdx = idx;
+                        }
+                    });
+                    console.log(currentIdx +' <--- index');               
+                    console.log(slidesArrCoorX[currentIdx]);
+                    if(this.className.indexOf('next') !== -1){
+                        nextSlides();
+                    } else {
+                        if(currentIdx == 0) {
+                            slides[slides.length -1].classList.add('current');
+                            currentIdx = slides.length -1;
+                            coordX = slidesArrCoorX[currentIdx];
+
+                            currentIdx = currentIdx -1;
+                        }
+                        else {
+                            slides[currentIdx - 1].classList.add('current');      
+                            coordX = slidesArrCoorX[currentIdx -1];
+                
+                        }   
+                    }
+                    sliderContainer.style.transform = `translateX(-${ coordX }px)`;
+                }
 
 
-                if(this.className.indexOf('next') !== -1){
+                function nextSlides() {
                     coordX = slidesArrCoorX[currentIdx + 1];
                     if(currentIdx < slides.length -1) {
                         slides[currentIdx + 1].classList.add('current');                        
@@ -88,40 +100,41 @@
                         sliderContainer.style.transform = `translateX(-0px)`;
                         console.log('dre')
                     }
-                } else {
-                    console.log('prev click');
-
-                    console.log(currentIdx + 'index UPPER');
-
-                    if(currentIdx == 0) {
-                        slides[slides.length -1].classList.add('current');
-                        currentIdx = slides.length -1;
-
-                        console.log(currentIdx    + ' current prev ');
-                        coordX = slidesArrCoorX[currentIdx];
-
-                        currentIdx = currentIdx -1;
-                    }
-                    else {
-                        slides[currentIdx - 1].classList.add('current');
-      
-                        coordX = slidesArrCoorX[currentIdx -1];
-                        
-                        console.log(currentIdx - 1 + ' aw     ');                
-                    }   
-
-                    console.log(currentIdx + 'gawas sa if index')
                 }
 
                 
 
+
                 
-                sliderContainer.style.transform = `translateX(-${ coordX }px)`;
+                    setInterval(()=>{
 
-            }
+                        slides.forEach((e, idx) => {
+                        if(e.className.indexOf('current') !== -1) {
+                            e.classList.remove('current');
+                            currentIdx = idx;
+                        }
+                    });
+                    
+                        coordX = slidesArrCoorX[currentIdx + 1];
+                        if(currentIdx < slides.length -1) {
+                            slides[currentIdx + 1].classList.add('current');                        
+                        } else {
+                            slides[0].classList.add('current');
+                            sliderContainer.style.transform = `translateX(-0px)`;
+                        }
+                        if(currentIdx < slides.length -1) {
+                            currentIdx++;
+                            console.log(currentIdx);
+                        } else {
+                            currentIdx = 0;
+                        }
 
-            navBtn.forEach(e=>e.addEventListener('click', coords));
-            
+                        sliderContainer.style.transform = `translateX(-${ coordX }px)`;
+                    }, 3000);
+                
+
+                navBtn.forEach(e=>e.addEventListener('click', coords));
+        }
 
     </script>
 </body>
