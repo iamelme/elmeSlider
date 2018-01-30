@@ -1,0 +1,23 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.slider {
+    overflow: hidden;
+    width: 640px;
+    margin: 0 auto;
+}
+
+.slider__inner {
+    transition: all .3s;
+}
+
+.slider__item {
+    display: inline-block;
+    float: left;
+}
