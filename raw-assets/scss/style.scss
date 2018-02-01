@@ -1,0 +1,158 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.slider {
+    position: relative;
+    overflow: hidden;
+    width: 640px;
+    margin: 0 auto;
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 1;
+        width: 15px;
+        height: 15px;
+        margin: -25px 0 0 -25px; 
+        background: #ccc;
+        border-radius: 15px;
+        opacity: .7;
+    
+        transform: translate(-50%, -50%);
+    
+        animation: sk-bounce 1.2s infinite ease-in-out;
+    }
+    &::after {
+        margin-left: -10px;
+        animation-delay: -.3s;
+    }
+}
+
+
+@keyframes sk-bounce {
+    0%, 100% { 
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    } 50% { 
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+    }
+}
+
+.slider__inner {
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .3s;
+
+    &::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+}
+
+.slider__item {
+
+}
+
+.nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 3;
+    width: 40px;
+    height: 50px;
+    background: rgba(255,255,255, 0.5);
+    border: 0;
+
+    text-indent: -999em;
+
+    cursor: pointer;
+
+
+    transform: translateY(-50%);
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 2px;
+        height: 13px;
+        background: #333;
+    }
+
+    &:focus,
+    &:active {
+        outline: none;
+    }
+}
+
+.prev {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+
+    &::before {
+        left: 43%;
+        transform: rotate(-45deg);
+        margin-top: -3px;
+    }
+    &::after {
+        left: 43%;
+        margin-top: -11px;
+        transform: rotate(45deg);
+    }
+}
+
+.next {
+    left: auto;
+    right: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+
+    &::before {
+        right: 43%;
+        transform: rotate(-135deg);
+        margin-top: -3px;
+    }
+    &::after {
+        right: 43%;
+        margin-top: -11px;
+        transform: rotate(135deg);
+    }
+}
+
+.paginate {
+    position: absolute;
+    bottom: 20px;
+    z-index: 4;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.pagi__item {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 2px;
+    background: #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+
+    &.active {
+        background: red;
+    }
+}
