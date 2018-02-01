@@ -62,10 +62,10 @@
                         slidesArrCoorX.push(slidesWidth);
                     }
 
-                    document.querySelector('.paginate').innerHTML += `<span class="pagi__item"></span>`;
+                    document.querySelector('.paginate').innerHTML += `<span class="pagi__item" data-slideIndex="${idx}"></span>`;
                 });
 
-                let pagiItem = document.querySelectorAll('.pagi__item');
+                let pagiItem = document.querySelectorAll('.pagi__item'); // initialize paginate items
                 
                 slides[0].classList.add('current');
                 pagiItem[0].classList.add('active');
@@ -104,10 +104,7 @@
                         }   
                     }
                     sliderContainer.style.transform = `translateX(-${ coordX }px)`;
-                }
-                
-
-               
+                }        
 
                 function nextSlides() {
                     coordX = slidesArrCoorX[currentIdx + 1];
@@ -149,12 +146,27 @@
                     sliderContainer.style.transform = `translateX(-${ coordX }px)`;
                 }, 3000);
                 
+                function pagiTarget() {
+                    slides[currentIdx].classList.remove('current');
+                    let _thisIndex = this.getAttribute('data-slideIndex');
+                    currentIdx = _thisIndex;
 
+                    slides[currentIdx].classList.add('current');  
+                    coordX = slidesArrCoorX[currentIdx];
+                    sliderContainer.style.transform = `translateX(-${ coordX }px)`;
 
-                pagiItem.forEach(e=>{
-                    console.log(e);
+                    pagiItem.forEach(e=>{
+                        e.classList.remove('active');
+                    });
+                    
+
+                    this.classList.add('active');
+                }
+
+                pagiItem.forEach((e, idx)=>{
+                    e.addEventListener('click', pagiTarget);
                 })
-
+                
                 navBtn.forEach(e=>e.addEventListener('click', coords));
 
                 // let w = 0;
