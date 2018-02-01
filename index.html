@@ -9,18 +9,20 @@
 </head>
 <body>
     <div class="slider">
-        <div class="slider__inner">
-            <div class="slider__item">
-                <img src="img/1.jpg" alt="">
-            </div>
-            <div class="slider__item ">
-                <img src="img/2.jpg" alt="">
-            </div>
-            <div class="slider__item ">
-                <img src="img/3.jpg" alt="">
-            </div>
-            <div class="slider__item">
-                <img src="img/4.jpg" alt="">
+        <div class="slider__drag">
+            <div class="slider__inner">
+                <div class="slider__item">
+                    <img src="img/1.jpg" alt="">
+                </div>
+                <div class="slider__item ">
+                    <img src="img/2.jpg" alt="">
+                </div>
+                <div class="slider__item ">
+                    <img src="img/3.jpg" alt="">
+                </div>
+                <div class="slider__item">
+                    <img src="img/4.jpg" alt="">
+                </div>
             </div>
         </div>
 
@@ -40,6 +42,7 @@
                 widthContainer = 0,
                 slidesArrCoorX = [0],
                 coordX,
+                sliderHover = false,
                 currentIdx = 0;
 
                 sliderContainer.style.opacity = 1;
@@ -99,8 +102,7 @@
                         else {
                             slides[currentIdx - 1].classList.add('current');      
                             pagiItem[currentIdx - 1].classList.add('active');      
-                            coordX = slidesArrCoorX[currentIdx -1];
-                
+                            coordX = slidesArrCoorX[currentIdx -1];                
                         }   
                     }
                     sliderContainer.style.transform = `translateX(-${ coordX }px)`;
@@ -116,35 +118,47 @@
                         pagiItem[0].classList.add('active');
                         sliderContainer.style.transform = `translateX(-0px)`;
                     }
+                }                
+
+                mainSlider.addEventListener('mouseenter', autoLoop, false);
+                mainSlider.addEventListener('mouseleave', autoLoop, false);                
+                mainSlider.addEventListener('touchstart', autoLoop, false);
+                mainSlider.addEventListener('touchend', autoLoop, false);
+
+                navBtn.forEach(e =>{
+                    e.addEventListener('click', stopAutoLoop, false);
+                });
+
+                function stopAutoLoop() {
+                    sliderHover = true;       
+                }
+
+                function autoLoop(){
+                    sliderHover = sliderHover == false ? true: false;       
+                    console.log(sliderHover);                    
                 }
                 
-                setInterval(()=>{
+                window.setInterval(()=>{
+                    if(sliderHover === false) {
+                        slides.forEach((e, idx) => {
+                            if(e.className.indexOf('current') !== -1) {
+                                e.classList.remove('current');
+                                currentIdx = idx;
+                                pagiItem[currentIdx].classList.remove('active');
+                            }
+                        });
 
-                    slides.forEach((e, idx) => {
-                        if(e.className.indexOf('current') !== -1) {
-                            e.classList.remove('current');
-                            currentIdx = idx;
-                            pagiItem[currentIdx].classList.remove('active');
+                        nextSlides();
+                        if(currentIdx < slides.length -1) {
+                            currentIdx++;
+                        } else {
+                            currentIdx = 0;
                         }
-                    });
+                        sliderContainer.style.transform = `translateX(-${ coordX }px)`;
+                    }
+                }, 3000);  
                 
-                    coordX = slidesArrCoorX[currentIdx + 1];
-                    if(currentIdx < slides.length -1) {
-                        slides[currentIdx + 1].classList.add('current');                        
-                        pagiItem[currentIdx + 1].classList.add('active');                        
-                    } else {
-                        slides[0].classList.add('current');
-                        pagiItem[0].classList.add('active');
-                        sliderContainer.style.transform = `translateX(-0px)`;
-                    }
-                    if(currentIdx < slides.length -1) {
-                        currentIdx++;
-                    } else {
-                        currentIdx = 0;
-                    }
-
-                    sliderContainer.style.transform = `translateX(-${ coordX }px)`;
-                }, 3000);
+                
                 
                 function pagiTarget() {
                     slides[currentIdx].classList.remove('current');
@@ -169,16 +183,31 @@
                 
                 navBtn.forEach(e=>e.addEventListener('click', coords));
 
-                // let w = 0;
                 // function testz(e) {
                 //     e.preventDefault();
-                //     clearInterval();
-                //     var touchObj = e.changedTouches[0];
+                //     let touchObj = e.changedTouches[0];
 
-                //     console.log(touchObj.clientX - w);
+                //     console.log(touchObj);
+                //     console.log('current index ' + slidesArrCoorX[currentIdx]) ;
+
+                //     coordX = touchObj.clientX - slidesArrCoorX[currentIdx] * 2;
+
+                
+                //     console.log(coordX);
+
+                //     let median = (slidesArrCoorX[currentIdx] + slidesArrCoorX[currentIdx + 1]) / 2,
+                //         finalCoord = 0;
+
+                //     if(coordX >= median) {
+                //         finalCoord = slidesArrCoorX[currentIdx + 1];
+                //         currentIdx = currentIdx + 1;
+                //         slides[currentIdx].classList.add('current');
+                //     }
+
+                //     sliderContainer.style.transform = `translateX(-${ finalCoord }px)`;
                 // }
 
-                // sliderContainer.addEventListener('touchmove', testz, false);
+                // document.querySelector('.slider__drag').addEventListener('touchstart', testz, false);
         }
 
     </script>
