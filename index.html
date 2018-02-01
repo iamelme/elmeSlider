@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/style.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Elme Slider</title>
 </head>
 <body>
     <div class="slider">
@@ -30,14 +30,20 @@
 
     <script>
         'use strict';
-        window.onload = function() {
+
+        window.onload = () => {
             let sliderContainer = document.querySelector('.slider__inner'),
                 slides = document.querySelectorAll('.slider__item'),
                 navBtn = document.querySelectorAll('.nav'),
+                navTemplate = `<div class="paginate"></div>`,
+                mainSlider = document.querySelector('.slider'),
                 widthContainer = 0,
                 slidesArrCoorX = [0],
                 coordX,
-                currentIdx;
+                currentIdx = 0;
+
+                sliderContainer.style.opacity = 1;
+                mainSlider.insertAdjacentHTML('beforeend', `<div class="paginate"></div>`);
 
                 slides.forEach(e => {
                     widthContainer += e.offsetWidth;
@@ -45,17 +51,24 @@
 
                 sliderContainer.style.width = `${widthContainer}px`; // initial width
 
+                let slidesWidth = 0;
 
                 slides.forEach((e, idx) => {
                     if(e.className.indexOf('current') !== -1) {
                         currentIdx = idx;
                     }
                     if(idx < slides.length - 1) {
-                        slidesArrCoorX.push(e.getBoundingClientRect().x);
+                        slidesWidth = e.getBoundingClientRect().width + slidesWidth;
+                        slidesArrCoorX.push(slidesWidth);
                     }
+
+                    document.querySelector('.paginate').innerHTML += `<span class="pagi__item"></span>`;
                 });
 
+                let pagiItem = document.querySelectorAll('.pagi__item');
+                
                 slides[0].classList.add('current');
+                pagiItem[0].classList.add('active');
                 console.log(currentIdx +' <--- index outside');
 
                 console.log(slidesArrCoorX);
@@ -66,6 +79,7 @@
                     slides.forEach((e, idx) => {
                         if(e.className.indexOf('current') !== -1) {
                             e.classList.remove('current');
+                            pagiItem[idx].classList.remove('active');
                             currentIdx = idx;
                         }
                     });
@@ -76,6 +90,7 @@
                     } else {
                         if(currentIdx == 0) {
                             slides[slides.length -1].classList.add('current');
+                            pagiItem[slides.length -1].classList.add('active');
                             currentIdx = slides.length -1;
                             coordX = slidesArrCoorX[currentIdx];
 
@@ -83,57 +98,75 @@
                         }
                         else {
                             slides[currentIdx - 1].classList.add('current');      
+                            pagiItem[currentIdx - 1].classList.add('active');      
                             coordX = slidesArrCoorX[currentIdx -1];
                 
                         }   
                     }
                     sliderContainer.style.transform = `translateX(-${ coordX }px)`;
                 }
+                
 
+               
 
                 function nextSlides() {
                     coordX = slidesArrCoorX[currentIdx + 1];
                     if(currentIdx < slides.length -1) {
-                        slides[currentIdx + 1].classList.add('current');                        
+                        slides[currentIdx + 1].classList.add('current');
+                        pagiItem[currentIdx + 1].classList.add('active');
                     } else {
                         slides[0].classList.add('current');
+                        pagiItem[0].classList.add('active');
                         sliderContainer.style.transform = `translateX(-0px)`;
-                        console.log('dre')
                     }
                 }
-
                 
+                setInterval(()=>{
 
-
-                
-                    setInterval(()=>{
-
-                        slides.forEach((e, idx) => {
+                    slides.forEach((e, idx) => {
                         if(e.className.indexOf('current') !== -1) {
                             e.classList.remove('current');
                             currentIdx = idx;
+                            pagiItem[currentIdx].classList.remove('active');
                         }
                     });
-                    
-                        coordX = slidesArrCoorX[currentIdx + 1];
-                        if(currentIdx < slides.length -1) {
-                            slides[currentIdx + 1].classList.add('current');                        
-                        } else {
-                            slides[0].classList.add('current');
-                            sliderContainer.style.transform = `translateX(-0px)`;
-                        }
-                        if(currentIdx < slides.length -1) {
-                            currentIdx++;
-                            console.log(currentIdx);
-                        } else {
-                            currentIdx = 0;
-                        }
+                
+                    coordX = slidesArrCoorX[currentIdx + 1];
+                    if(currentIdx < slides.length -1) {
+                        slides[currentIdx + 1].classList.add('current');                        
+                        pagiItem[currentIdx + 1].classList.add('active');                        
+                    } else {
+                        slides[0].classList.add('current');
+                        pagiItem[0].classList.add('active');
+                        sliderContainer.style.transform = `translateX(-0px)`;
+                    }
+                    if(currentIdx < slides.length -1) {
+                        currentIdx++;
+                    } else {
+                        currentIdx = 0;
+                    }
 
-                        sliderContainer.style.transform = `translateX(-${ coordX }px)`;
-                    }, 3000);
+                    sliderContainer.style.transform = `translateX(-${ coordX }px)`;
+                }, 3000);
                 
 
+
+                pagiItem.forEach(e=>{
+                    console.log(e);
+                })
+
                 navBtn.forEach(e=>e.addEventListener('click', coords));
+
+                // let w = 0;
+                // function testz(e) {
+                //     e.preventDefault();
+                //     clearInterval();
+                //     var touchObj = e.changedTouches[0];
+
+                //     console.log(touchObj.clientX - w);
+                // }
+
+                // sliderContainer.addEventListener('touchmove', testz, false);
         }
 
     </script>

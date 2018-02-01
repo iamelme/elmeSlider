@@ -1,3 +1,3 @@
 # sliderVanillaJS
 
-A vanilla JS slider
+No dependent needed for this simple Slider
